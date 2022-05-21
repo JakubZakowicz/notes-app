@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 interface LoginInputs {
   email: string;
@@ -15,7 +17,8 @@ const schema = Yup.object({
   password: Yup.string().required('Password is required!'),
 });
 
-const Login = () => {
+const Login: React.FC<{}> = () => {
+  let navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -23,7 +26,22 @@ const Login = () => {
   } = useForm<LoginInputs>({
     resolver: yupResolver(schema),
   });
-  const onSubmit: SubmitHandler<LoginInputs> = data => console.log(data);
+  const onSubmit: SubmitHandler<LoginInputs> = data => {
+    try {
+      axios
+        .post('http://localhost:1337/api/auth/local', {
+          identifier: data.email,
+          password: data.password,
+        })
+        .then(res => {
+          console.log(res);
+          localStorage.setItem('token', res.data.jwt)
+          navigate('/')
+        })
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="container mx-auto">
       <div className="flex justify-center h-screen items-center">
@@ -49,7 +67,9 @@ const Login = () => {
                   {...register('password')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">{errors.password?.message}</p>
+                <p className="text-red-500 absolute">
+                  {errors.password?.message}
+                </p>
               </div>
             </div>
             <div className="flex justify-between mt-7">
