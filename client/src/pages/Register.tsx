@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from 'react-query';
+import axios from 'axios';
 import * as Yup from 'yup';
 
-interface LoginInputs {
-  username: string,
+interface RegisterInputs {
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string
+  confirmPassword: string;
 }
 
 const schema = Yup.object({
@@ -15,21 +18,41 @@ const schema = Yup.object({
   email: Yup.string()
     .email('Invalid email!')
     .required('Email address is required!'),
-  password: Yup.string().required('Password is required!'),
-  confirmPassword: Yup.string()
-     .oneOf([Yup.ref('password'), null], 'Passwords must match!')
+  password: Yup.string().required('Password is required!').min(8),
+  confirmPassword: Yup.string().oneOf(
+    [Yup.ref('password'), null],
+    'Passwords must match!'
+  ),
 });
 
-const Register = () => {
+const Register: React.FC<{}> = () => {
+  const navigate = useNavigate();
+  const { mutate, isLoading, isError, error } = useMutation<
+    Response,
+    Error,
+    RegisterInputs
+  >(
+    async data =>
+      await axios.post('http://localhost:1337/api/auth/local/register', data),
+    {
+      onSuccess: () => navigate('/auth/login'),
+      onError: error => console.log(error),
+    }
+  );
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginInputs>({
+  } = useForm<RegisterInputs>({
     reValidateMode: 'onSubmit',
     resolver: yupResolver(schema),
   });
-  const onSubmit: SubmitHandler<LoginInputs> = data => console.log(data);
+  const onSubmit: SubmitHandler<RegisterInputs> = data => {
+    mutate(data);
+  };
+
+  if (isError) return <h1>{error?.message}</h1>;
+
   return (
     <div className="container mx-auto">
       <div className="flex justify-center h-screen items-center">
@@ -44,7 +67,9 @@ const Register = () => {
                   {...register('username')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">{errors.username?.message}</p>
+                <p className="text-red-500 absolute">
+                  {errors?.username?.message}
+                </p>
               </div>
               <div className="relative">
                 <label htmlFor="email">Email address</label>
@@ -54,7 +79,9 @@ const Register = () => {
                   {...register('email')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">{errors.email?.message}</p>
+                <p className="text-red-500 absolute">
+                  {errors?.email?.message}
+                </p>
               </div>
               <div className="relative">
                 <label htmlFor="password">Password</label>
@@ -64,20 +91,27 @@ const Register = () => {
                   {...register('password')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">{errors.password?.message}</p>
+                <p className="text-red-500 absolute">
+                  {errors?.password?.message}
+                </p>
               </div>
               <div className="relative">
                 <label htmlFor="password">Confirm password</label>
                 <input
-                  id="password"
+                  id="confirmPassword"
                   type="password"
                   {...register('confirmPassword')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">{errors.confirmPassword?.message}</p>
+                <p className="text-red-500 absolute">
+                  {errors?.confirmPassword?.message}
+                </p>
               </div>
             </div>
-            <button className="bg-yellow-500 w-full mt-10 py-2 rounded-lg text-white hover:bg-yellow-600">
+            <button
+              className="bg-yellow-500 w-full mt-10 py-2 rounded-lg text-white hover:bg-yellow-600"
+              disabled={isLoading}
+            >
               Register
             </button>
           </form>
@@ -91,6 +125,6 @@ const Register = () => {
       </div>
     </div>
   );
-}
+};
 
-export default Register
+export default Register;
