@@ -4,7 +4,7 @@ import { Navigate, RouteProps, Outlet } from 'react-router-dom';
 interface PrivateRouteProps extends RouteProps {}
 
 const PrivateRoute: FC<PrivateRouteProps> = () => {
-  return localStorage.getItem('token') ? (
+  return localStorage.getItem('jwt') ? (
     <Outlet />
   ) : (
     <Navigate to="/auth/login" />

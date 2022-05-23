@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -18,7 +19,30 @@ const schema = Yup.object({
 });
 
 const Login: React.FC<{}> = () => {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
+  const { mutate, isLoading, isError, error } = useMutation<
+    Response,
+    Error,
+    LoginInputs
+  >(
+    async data => {
+      const { email, password } = data;
+      return await axios.post('http://localhost:1337/api/auth/local', {
+        identifier: email,
+        password,
+      });
+    },
+    {
+      onSuccess: (response: any) => {
+        navigate('/');
+        console.log(response);
+        localStorage.setItem('jwt', response.data.jwt);
+      },
+      onError: error => {
+        console.log(error);
+      },
+    }
+  );
   const {
     register,
     handleSubmit,
@@ -26,28 +50,18 @@ const Login: React.FC<{}> = () => {
   } = useForm<LoginInputs>({
     resolver: yupResolver(schema),
   });
-  const onSubmit: SubmitHandler<LoginInputs> = data => {
-    try {
-      axios
-        .post('http://localhost:1337/api/auth/local', {
-          identifier: data.email,
-          password: data.password,
-        })
-        .then(res => {
-          console.log(res);
-          localStorage.setItem('token', res.data.jwt)
-          navigate('/')
-        })
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const onSubmit: SubmitHandler<LoginInputs> = data => mutate(data);
+
+  if (isError && error?.name !== 'ValidationError')
+    return <p>{error?.message}</p>;
+
   return (
     <div className="container mx-auto">
       <div className="flex justify-center h-screen items-center">
         <div className="bg-white border w-96 rounded-xl px-10 py-5 shadow-lg">
           <h1 className="text-3xl font-semibold text-center">Login</h1>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
+            <p>{error?.message}</p>
             <div className="flex flex-col gap-8">
               <div className="relative">
                 <label htmlFor="email">Email address</label>
@@ -79,7 +93,10 @@ const Login: React.FC<{}> = () => {
               </div>
               <p>Forgot Password?</p>
             </div>
-            <button className="bg-yellow-500 w-full mt-5 py-2 rounded-lg text-white hover:bg-yellow-600">
+            <button
+              className="bg-yellow-500 w-full mt-5 py-2 rounded-lg text-white hover:bg-yellow-600"
+              disabled={isLoading}
+            >
               Login
             </button>
           </form>
