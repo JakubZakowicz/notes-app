@@ -3,27 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from 'react-query';
-import axios from 'axios';
-import * as Yup from 'yup';
-
-interface RegisterInputs {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const schema = Yup.object({
-  username: Yup.string().required('Username is required!').min(3).max(48),
-  email: Yup.string()
-    .email('Invalid email!')
-    .required('Email address is required!'),
-  password: Yup.string().required('Password is required!').min(8),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref('password'), null],
-    'Passwords must match!'
-  ),
-});
+import { registerSchema } from '../schemas';
+import { RegisterInputs } from '../types';
+import { signup } from '../services/auth';
 
 const Register: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -31,22 +13,20 @@ const Register: React.FC<{}> = () => {
     Response,
     Error,
     RegisterInputs
-  >(
-    async data =>
-      await axios.post('http://localhost:1337/api/auth/local/register', data),
-    {
-      onSuccess: () => navigate('/auth/login'),
-      onError: error => console.log(error),
-    }
-  );
+  >(async data => signup(data), {
+    onSuccess: () => navigate('/auth/login'),
+    onError: error => console.log(error),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterInputs>({
     reValidateMode: 'onSubmit',
-    resolver: yupResolver(schema),
+    resolver: yupResolver(registerSchema),
   });
+
   const onSubmit: SubmitHandler<RegisterInputs> = data => {
     mutate(data);
   };

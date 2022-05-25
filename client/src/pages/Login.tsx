@@ -3,53 +3,36 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-import axios from 'axios';
-
-interface LoginInputs {
-  email: string;
-  password: string;
-}
-
-const schema = Yup.object({
-  email: Yup.string()
-    .email('Invalid email!')
-    .required('Email address is required!'),
-  password: Yup.string().required('Password is required!'),
-});
+import { loginSchema } from '../schemas';
+import { LoginInputs } from '../types';
+import { login, setToken } from '../services/auth';
 
 const Login: React.FC<{}> = () => {
   let navigate = useNavigate();
+
   const { mutate, isLoading, isError, error } = useMutation<
     Response,
     Error,
     LoginInputs
-  >(
-    async data => {
-      const { email, password } = data;
-      return await axios.post('http://localhost:1337/api/auth/local', {
-        identifier: email,
-        password,
-      });
+  >(async data => login(data), {
+    onSuccess: (response: any) => {
+      navigate('/');
+      console.log(response);
+      setToken(response.data.jwt);
     },
-    {
-      onSuccess: (response: any) => {
-        navigate('/');
-        console.log(response);
-        localStorage.setItem('jwt', response.data.jwt);
-      },
-      onError: error => {
-        console.log(error);
-      },
-    }
-  );
+    onError: error => {
+      console.log(error);
+    },
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInputs>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(loginSchema),
   });
+
   const onSubmit: SubmitHandler<LoginInputs> = data => mutate(data);
 
   if (isError && error?.name !== 'ValidationError')

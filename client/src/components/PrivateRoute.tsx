@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
-import { Navigate, RouteProps, Outlet } from 'react-router-dom';
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { PrivateRouteProps } from '../types'
+import { isAuthenticated } from '../services/auth';
 
-interface PrivateRouteProps extends RouteProps {}
-
-const PrivateRoute: FC<PrivateRouteProps> = () => {
-  return localStorage.getItem('jwt') ? (
+const PrivateRoute: React.FC<PrivateRouteProps> = () => {
+  return isAuthenticated() ? (
     <Outlet />
   ) : (
     <Navigate to="/auth/login" />
