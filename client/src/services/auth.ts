@@ -19,3 +19,7 @@ export const isAuthenticated = (): boolean =>
 
 export const setToken = (token: string): void =>
   localStorage.setItem('jwt', token);
+
+export const getToken = () => localStorage.getItem('jwt');
+
+export const logout = () => localStorage.removeItem('jwt');
