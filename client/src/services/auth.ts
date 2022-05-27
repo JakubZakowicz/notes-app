@@ -2,6 +2,7 @@ import { LoginInputs, RegisterInputs } from '../types';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../api/auth';
+import api from '../api/api';
 
 export const useLogin = (): UseMutationResult<Response, Error, LoginInputs> => {
   const navigate = useNavigate();
@@ -29,13 +30,13 @@ export const useRegister = (): UseMutationResult<
 };
 
 export const isAuthenticated = (): boolean =>
-  localStorage.getItem('jwt') && localStorage.getItem('jwt') !== undefined
+  getToken() && getToken() !== '' && getToken() !== undefined
     ? true
     : false;
 
 export const setToken = (token: string): void =>
   localStorage.setItem('jwt', token);
 
-export const getToken = (): string | null => localStorage.getItem('jwt');
+export const getToken = (): string => localStorage.getItem('jwt') ?? '';
 
 export const logout = (): void => localStorage.removeItem('jwt');

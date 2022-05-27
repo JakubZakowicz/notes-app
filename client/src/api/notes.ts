@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { getToken } from '../services/auth';
 import { NotesResponse } from '../types';
+import api from './api';
 
 export const getNotes = async (): Promise<NotesResponse> => {
-  return await axios.get('http://localhost:1337/api/notes', {
+  return await api.get('/notes', {
     headers: { Authorization: 'Bearer ' + getToken() },
   });
 };
