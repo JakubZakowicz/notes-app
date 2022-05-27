@@ -1,4 +1,4 @@
-import { RouteProps } from 'react-router-dom'
+import { RouteProps } from 'react-router-dom';
 
 export interface LoginInputs {
   email: string;
@@ -13,3 +13,12 @@ export interface RegisterInputs {
 }
 
 export interface PrivateRouteProps extends RouteProps {}
+
+interface Note {
+  id: number;
+  attributes: { title: string; text: string };
+}
+
+export interface NotesResponse {
+  data: { data: Note[] };
+}

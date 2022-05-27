@@ -1,22 +1,13 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation } from 'react-query';
 import { registerSchema } from '../schemas';
 import { RegisterInputs } from '../types';
-import { signup } from '../services/auth';
+import { useRegister } from '../services/auth';
 
 const Register: React.FC<{}> = () => {
-  const navigate = useNavigate();
-  const { mutate, isLoading, isError, error } = useMutation<
-    Response,
-    Error,
-    RegisterInputs
-  >(async data => signup(data), {
-    onSuccess: () => navigate('/auth/login'),
-    onError: error => console.log(error),
-  });
+  const { mutate, isLoading, isError, error } = useRegister()
 
   const {
     register,

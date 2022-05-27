@@ -1,29 +1,13 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../schemas';
 import { LoginInputs } from '../types';
-import { login, setToken } from '../services/auth';
+import { useLogin } from '../services/auth';
 
 const Login: React.FC<{}> = () => {
-  let navigate = useNavigate();
-
-  const { mutate, isLoading, isError, error } = useMutation<
-    Response,
-    Error,
-    LoginInputs
-  >(async data => login(data), {
-    onSuccess: (response: any) => {
-      navigate('/');
-      console.log(response);
-      setToken(response.data.jwt);
-    },
-    onError: error => {
-      console.log(error);
-    },
-  });
+  const { mutate, isLoading, isError, error } = useLogin()
 
   const {
     register,
