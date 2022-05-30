@@ -22,3 +22,10 @@ interface Note {
 export interface NotesResponse {
   data: { data: Note[] };
 }
+
+export interface NotePost {
+  data: {
+    title: string;
+    text: string;
+  };
+}

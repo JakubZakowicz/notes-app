@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Notes from './pages/Notes'
 import PrivateRoute from './components/PrivateRoute'
+import AddNote from './pages/AddNote'
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
       <Routes>
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/" element={<PrivateRoute />}>
+        <Route element={<PrivateRoute />}>
           <Route path="/" element={<Notes />} />
+          <Route path="/notes/create" element={<AddNote />} />
         </Route>
       </Routes>
     </Router>

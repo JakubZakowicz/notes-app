@@ -1,6 +1,5 @@
 import api from './api';
 import { LoginInputs, RegisterInputs } from '../types';
-import { isAuthenticated } from '../services/auth';
 
 export const login = async (data: LoginInputs): Promise<Response> => {
   const { email, password } = data;
