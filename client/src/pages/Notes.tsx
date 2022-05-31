@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/auth';
-import { useGetNotes } from '../services/notes';
+import { useGetNotes, useDeleteNote } from '../services/notes';
 import ReactMarkdown from 'react-markdown';
 
 const Notes: React.FC<{}> = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetNotes();
+  const { mutate } = useDeleteNote();
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -30,10 +31,16 @@ const Notes: React.FC<{}> = () => {
       </Link>
       {data?.data?.data?.map(note => (
         <div key={note.id} className="mt-5">
-          <p>{note.attributes.title}</p>
-          <p>
-            <ReactMarkdown>{note.attributes.text}</ReactMarkdown>
-          </p>
+          <div className="flex justify-between">
+            <p>{note.attributes.title}</p>
+            <div>
+              <button className="mr-5 text-yellow-500">edit</button>
+              <button onClick={() => mutate(note.id)} className="text-red-500">
+                delete
+              </button>
+            </div>
+          </div>
+          <ReactMarkdown>{note.attributes.text}</ReactMarkdown>
         </div>
       ))}
     </div>

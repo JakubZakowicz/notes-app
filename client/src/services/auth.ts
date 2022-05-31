@@ -23,7 +23,6 @@ export const useRegister = (): UseMutationResult<
     async data => register(data),
     {
       onSuccess: () => navigate('/auth/login'),
-      onError: error => console.log(error),
     }
   );
 };
