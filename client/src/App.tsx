@@ -4,6 +4,7 @@ import Register from './pages/Register'
 import Notes from './pages/Notes'
 import PrivateRoute from './components/PrivateRoute'
 import AddNote from './pages/AddNote'
+import EditNote from './pages/EditNote'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Notes />} />
           <Route path="/notes/create" element={<AddNote />} />
+          <Route path="/notes/edit/:id" element={<EditNote />} />
         </Route>
       </Routes>
     </Router>

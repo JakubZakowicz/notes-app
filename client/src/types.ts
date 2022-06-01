@@ -23,7 +23,19 @@ export interface NotesResponse {
   data: { data: Note[] };
 }
 
+export interface NoteResponse {
+  data: { data: Note };
+}
+
 export interface NotePost {
+  data: {
+    title: string;
+    text: string;
+  };
+}
+
+export interface NotePut {
+  id: string | undefined
   data: {
     title: string;
     text: string;

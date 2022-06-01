@@ -34,7 +34,12 @@ const Notes: React.FC<{}> = () => {
           <div className="flex justify-between">
             <p>{note.attributes.title}</p>
             <div>
-              <button className="mr-5 text-yellow-500">edit</button>
+              <Link
+                to={`/notes/edit/${note.id}`}
+                className="mr-5 text-yellow-500"
+              >
+                edit
+              </Link>
               <button onClick={() => mutate(note.id)} className="text-red-500">
                 delete
               </button>
