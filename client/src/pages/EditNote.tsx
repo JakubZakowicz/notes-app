@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ReactQuill from 'react-quill';
-import TurndownService from 'turndown';
 import { useGetNote, useUpdateNote } from '../services/notes';
 import { NoteFormInputs } from '../types';
+import { htmlToMarkdown, markdownToHtml } from '../utils/parsers';
 
 const EditNote: React.FC<{}> = () => {
   const { id } = useParams();
@@ -15,14 +15,14 @@ const EditNote: React.FC<{}> = () => {
       defaultValues: { title: '', text: '' },
     });
   const text = watch('text');
-  const turndownService = new TurndownService();
 
   const note = data?.data?.data;
 
   useEffect(() => {
+    
     const loadedDefaultValues = {
       title: note?.attributes.title ?? '',
-      text: note?.attributes.text ?? '',
+      text: markdownToHtml(note?.attributes.text ?? ''),
     };
 
     reset(loadedDefaultValues);
@@ -40,7 +40,7 @@ const EditNote: React.FC<{}> = () => {
       id,
       data: {
         title: title === '' ? 'No title' : title!,
-        text: text === '' ? 'No text' : turndownService.turndown(text!),
+        text: text === '' ? 'No text' : htmlToMarkdown(text!),
       },
     };
     mutate(requestData);

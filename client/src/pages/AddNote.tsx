@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
-import TurndownService from 'turndown';
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useAddNote } from '../services/notes';
 import { NoteFormInputs } from '../types';
 
 import 'react-quill/dist/quill.snow.css';
+import { htmlToMarkdown } from '../utils/parsers';
 
 const AddNote: React.FC<{}> = () => {
   const { mutate } = useAddNote();
   const { register, handleSubmit, setValue, watch } = useForm<NoteFormInputs>()
   const text = watch('text')
-  const turndownService = new TurndownService();
   
   const onEditorChange = (text: string): void => {
     setValue('text', text)
@@ -22,7 +21,7 @@ const AddNote: React.FC<{}> = () => {
     const requestData = {
       data: {
         title: title === '' ? 'No title' : title,
-        text: text === '' ? 'No text' : turndownService.turndown(text),
+        text: text === '' ? 'No text' : htmlToMarkdown(text),
       },
     };
     mutate(requestData);
