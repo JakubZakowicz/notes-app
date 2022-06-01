@@ -1,50 +1,56 @@
-import React, { ChangeEvent, SyntheticEvent, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import TurndownService from 'turndown';
 import { useGetNote, useUpdateNote } from '../services/notes';
+import { NoteFormInputs } from '../types';
 
 const EditNote: React.FC<{}> = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetNote(id);
   const { mutate } = useUpdateNote();
+  const { register, handleSubmit, setValue, watch, reset } =
+    useForm<NoteFormInputs>({
+      defaultValues: { title: '', text: '' },
+    });
+  const text = watch('text');
   const turndownService = new TurndownService();
 
   const note = data?.data?.data;
 
-  const [title, setTitle] = useState<string>('');
-  const [text, setText] = useState<string>('');
-
   useEffect(() => {
-    setTitle(note?.attributes.title ?? '');
-    setText(note?.attributes.text ?? '');
-  }, [note]);
+    const loadedDefaultValues = {
+      title: note?.attributes.title ?? '',
+      text: note?.attributes.text ?? '',
+    };
 
-  const onTitleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setTitle(e.target.value);
-  };
+    reset(loadedDefaultValues);
+  }, [note, reset]);
 
   const onEditorChange = (text: string): void => {
-    setText(text);
+    setValue('text', text);
   };
 
-  const onSubmit = (e: SyntheticEvent): void => {
-    e.preventDefault();
-    const data = {
+  const onSubmit: SubmitHandler<NoteFormInputs> = (
+    data: NoteFormInputs
+  ): void => {
+    const { title, text } = data;
+    const requestData = {
       id,
       data: {
         title: title === '' ? 'No title' : title!,
         text: text === '' ? 'No text' : turndownService.turndown(text!),
       },
     };
-    mutate(data);
+    mutate(requestData);
   };
 
   if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="container mx-auto px-96 mt-20">
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <h1>Edit Note</h1>
         <label htmlFor="title" className="mt-5">
           Title
@@ -52,8 +58,7 @@ const EditNote: React.FC<{}> = () => {
         <input
           type="text"
           id="title"
-          value={title}
-          onChange={onTitleChange}
+          {...register('title')}
           className="border"
         />
         <label htmlFor="title" className="mt-5">

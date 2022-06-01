@@ -1,38 +1,36 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
+import React from 'react';
 import ReactQuill from 'react-quill';
 import TurndownService from 'turndown';
+import { useForm, SubmitHandler } from "react-hook-form"
 import { useAddNote } from '../services/notes';
+import { NoteFormInputs } from '../types';
 
 import 'react-quill/dist/quill.snow.css';
 
 const AddNote: React.FC<{}> = () => {
-  const [title, setTitle] = useState<string>('');
-  const [text, setText] = useState<string>('');
   const { mutate } = useAddNote();
+  const { register, handleSubmit, setValue, watch } = useForm<NoteFormInputs>()
+  const text = watch('text')
   const turndownService = new TurndownService();
-
-  const onTitleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setTitle(e.target.value);
-  };
   
   const onEditorChange = (text: string): void => {
-    setText(text);
+    setValue('text', text)
   };
 
-  const onSubmit = (e: SyntheticEvent): void => {
-    e.preventDefault();
-    const data = {
+  const onSubmit: SubmitHandler<NoteFormInputs> = (data: NoteFormInputs): void => {
+    const { title, text } = data
+    const requestData = {
       data: {
         title: title === '' ? 'No title' : title,
         text: text === '' ? 'No text' : turndownService.turndown(text),
       },
     };
-    mutate(data);
+    mutate(requestData);
   };
 
   return (
     <div className="container mx-auto px-96 mt-20">
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <h1>Add Note</h1>
         <label htmlFor="title" className="mt-5">
           Title
@@ -40,8 +38,7 @@ const AddNote: React.FC<{}> = () => {
         <input
           type="text"
           id="title"
-          value={title}
-          onChange={onTitleChange}
+          {...register('title')}
           className="border"
         />
         <label htmlFor="title" className="mt-5">

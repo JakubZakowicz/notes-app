@@ -19,6 +19,11 @@ interface Note {
   attributes: { title: string; text: string };
 }
 
+export interface NoteFormInputs {
+  title: string,
+  text: string
+}
+
 export interface NotesResponse {
   data: { data: Note[] };
 }
