@@ -5,9 +5,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../schemas';
 import { LoginInputs } from '../types';
 import { useLogin } from '../services/auth';
+import ErrorHandler from '../components/ErrorHandler';
 
 const Login: React.FC<{}> = () => {
-  const { mutate, isLoading, isError, error } = useLogin()
+  const { mutate, isLoading, isError, error } = useLogin();
 
   const {
     register,
@@ -19,16 +20,20 @@ const Login: React.FC<{}> = () => {
 
   const onSubmit: SubmitHandler<LoginInputs> = data => mutate(data);
 
-  if (isError && error?.name !== 'ValidationError')
-    return <p>{error?.message}</p>;
+  if (isError && error?.response?.data?.error?.name !== 'ValidationError')
+    return <ErrorHandler error={error} />;
 
   return (
     <div className="container mx-auto">
       <div className="flex justify-center h-screen items-center">
-        <div className="bg-white border w-96 rounded-xl px-10 py-5 shadow-lg">
+        <div className="bg-white bg-opacity-75 border w-96 rounded-xl px-10 py-5 shadow-xl">
           <h1 className="text-3xl font-semibold text-center">Login</h1>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
-            <p>{error?.message}</p>
+            {isError && (
+              <p className="text-center text-red-500 mb-5">
+                {error.response?.data.error.message}
+              </p>
+            )}
             <div className="flex flex-col gap-8">
               <div className="relative">
                 <label htmlFor="email">Email address</label>
@@ -53,7 +58,7 @@ const Login: React.FC<{}> = () => {
                 </p>
               </div>
             </div>
-            <div className="flex justify-between mt-7">
+            <div className="flex justify-between mt-3">
               <div className="flex items-center gap-2">
                 <input type="checkbox" className="w-4 h-4" />
                 <p>Remember me</p>
@@ -61,7 +66,7 @@ const Login: React.FC<{}> = () => {
               <p>Forgot Password?</p>
             </div>
             <button
-              className="bg-yellow-500 w-full mt-5 py-2 rounded-lg text-white hover:bg-yellow-600"
+              className="bg-yellow-500 w-full mt-8 py-2 rounded-lg text-white hover:bg-yellow-600"
               disabled={isLoading}
             >
               Login

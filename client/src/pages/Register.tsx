@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '../schemas';
 import { RegisterInputs } from '../types';
 import { useRegister } from '../services/auth';
+import ErrorHandler from '../components/ErrorHandler';
 
 const Register: React.FC<{}> = () => {
   const { mutate, isLoading, isError, error } = useRegister()
@@ -22,12 +23,12 @@ const Register: React.FC<{}> = () => {
     mutate(data);
   };
 
-  if (isError) return <h1>{error?.message}</h1>;
+  if (isError) return <ErrorHandler error={error} />
 
   return (
     <div className="container mx-auto">
       <div className="flex justify-center h-screen items-center">
-        <div className="bg-white border w-96 rounded-xl px-10 py-5 shadow-lg">
+        <div className="bg-white bg-opacity-75 border w-96 rounded-xl px-10 py-5 shadow-xl">
           <h1 className="text-3xl font-semibold text-center">Register</h1>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
             <div className="flex flex-col gap-8">

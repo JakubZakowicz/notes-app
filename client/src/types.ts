@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { RouteProps } from 'react-router-dom';
 
 export interface LoginInputs {
@@ -45,4 +46,14 @@ export interface NotePut {
     title: string;
     text: string;
   };
+}
+
+export interface ErrorHandlerProps {
+  error: AxiosError<any>;
+}
+
+export interface ErrorMessageProps {
+  status?: string;
+  name?: string;
+  message?: string;
 }
