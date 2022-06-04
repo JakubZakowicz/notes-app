@@ -14,8 +14,8 @@ export const useLogin = (): UseMutationResult<
     async data => login(data),
     {
       onSuccess: (response: any) => {
-        navigate('/');
         setToken(response.data.jwt);
+        navigate('/');
       },
     }
   );
@@ -43,4 +43,4 @@ export const setToken = (token: string): void =>
 
 export const getToken = (): string => localStorage.getItem('jwt') ?? '';
 
-export const logout = (): void => localStorage.removeItem('jwt');
+export const removeToken = (): void => localStorage.removeItem('jwt');

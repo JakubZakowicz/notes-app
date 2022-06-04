@@ -1,53 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../services/auth';
-import { useGetNotes, useDeleteNote } from '../services/notes';
+import { removeToken } from '../services/auth';
+import { useGetNotes } from '../services/notes';
 import ReactMarkdown from 'react-markdown';
 
 const Notes: React.FC<{}> = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetNotes();
-  const { mutate } = useDeleteNote();
 
   if (isLoading) return <p>Loading...</p>;
 
   if (isError) return <p>{error.message}</p>;
 
+  const logout = () => {
+    removeToken();
+    navigate('/auth/login');
+  };
+
   return (
-    <div className="container mx-auto relative">
+    <div className="container mx-auto relative px-10 xl:px-20">
       <button
-        className="float-right"
-        onClick={() => {
-          logout();
-          navigate('/auth/login');
-        }}
+        className="absolute right-0 bg-yellow-500 hover:bg-yellow-600 text-xl text-white rounded-xl py-2 px-4"
+        onClick={logout}
       >
         Logout
       </button>
-      <p className="my-5">Notes</p>
-      <Link to="notes/create" className="bg-green-500 text-white rounded p-1">
+      <h1 className="text-5xl text-center font-bold my-10">Notes</h1>
+      <Link
+        to="notes/create"
+        className="bg-green-500 hover:bg-green-600 text-xl text-white rounded-xl py-2 px-4"
+      >
         New Note
       </Link>
-      {data?.data?.data?.map(note => (
-        <div key={note.id} className="mt-5">
-          <div className="flex justify-between">
-            <p>{note.attributes.title}</p>
-            <div>
-              <Link
-                to={`/notes/edit/${note.id}`}
-                className="mr-5 text-yellow-500"
-              >
-                edit
-              </Link>
-              <button onClick={() => mutate(note.id)} className="text-red-500">
-                delete
-              </button>
+      <div className="grid lg:grid-cols-2 2xl:grid-cols-3 mt-5 gap-y-5">
+        {data?.data?.data?.map(note => (
+          <Link to={`/notes/edit/${note.id}`}>
+            <div
+              key={note.id}
+              className="mt-5 bg-light-yellow w-[400px] h-[300px] px-8 py-5 rounded-3xl shadow-xl transition hover:scale-110"
+            >
+              <div className="flex justify-between">
+                <h2 className="text-xl font-semibold">
+                  {note.attributes.title}
+                </h2>
+              </div>
+              <div className="h-52 overflow-hidden">
+                <ReactMarkdown className="mt-4">
+                  {note.attributes.text}
+                </ReactMarkdown>
+              </div>
             </div>
-          </div>
-          <ReactMarkdown>{note.attributes.text}</ReactMarkdown>
-        </div>
-      ))}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

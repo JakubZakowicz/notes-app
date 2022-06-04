@@ -1,12 +1,12 @@
 import { AxiosError } from 'axios';
 import { RouteProps } from 'react-router-dom';
 
-export interface LoginInputs {
+export type LoginInputs = {
   email: string;
   password: string;
 }
 
-export interface RegisterInputs {
+export type RegisterInputs = {
   username: string;
   email: string;
   password: string;
@@ -15,32 +15,32 @@ export interface RegisterInputs {
 
 export interface PrivateRouteProps extends RouteProps {}
 
-interface Note {
+type Note = {
   id: number;
   attributes: { title: string; text: string };
 }
 
-export interface NoteFormInputs {
+export type NoteFormInputs = {
   title: string,
   text: string
 }
 
-export interface NotesResponse {
+export type NotesResponse = {
   data: { data: Note[] };
 }
 
-export interface NoteResponse {
+export type NoteResponse = {
   data: { data: Note };
 }
 
-export interface NotePost {
+export type NotePost = {
   data: {
     title: string;
     text: string;
   };
 }
 
-export interface NotePut {
+export type NotePut = {
   id: string | undefined
   data: {
     title: string;
@@ -48,11 +48,11 @@ export interface NotePut {
   };
 }
 
-export interface ErrorHandlerProps {
+export type ErrorHandlerProps = {
   error: AxiosError<any>;
 }
 
-export interface ErrorMessageProps {
+export type ErrorMessageProps = {
   status?: string;
   name?: string;
   message?: string;

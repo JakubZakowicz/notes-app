@@ -8,7 +8,7 @@ import EditNote from './pages/EditNote';
 
 function App() {
   return (
-    <div className="before:bg-main-background before:absolute before:inset-0 before:opacity-60 before:-z-10">
+    <div className="h-full before:bg-main-background before: before:fixed before:inset-0 before:opacity-60 before:-z-10">
       <Router>
         <Routes>
           <Route path="/auth/login" element={<Login />} />
