@@ -53,12 +53,12 @@ const Login: React.FC<{}> = () => {
                   {...register('password')}
                   className="h-10 border rounded-lg w-full pl-2"
                 />
-                <p className="text-red-500 absolute">
+                <p className="text-red-500 absolute -bottom-5">
                   {errors.password?.message}
                 </p>
               </div>
             </div>
-            <div className="flex justify-between mt-3">
+            <div className="flex justify-between mt-4">
               <div className="flex items-center gap-2">
                 <input type="checkbox" className="w-4 h-4" />
                 <p>Remember me</p>
@@ -69,7 +69,7 @@ const Login: React.FC<{}> = () => {
               className="bg-yellow-500 w-full mt-8 py-2 rounded-lg text-white hover:bg-yellow-600"
               disabled={isLoading}
             >
-              Login
+              {isLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
           <p className="text-center mt-5">

@@ -8,7 +8,7 @@ import { useRegister } from '../services/auth';
 import ErrorHandler from '../components/ErrorHandler';
 
 const Register: React.FC<{}> = () => {
-  const { mutate, isLoading, isError, error } = useRegister()
+  const { mutate, isLoading, isError, error } = useRegister();
 
   const {
     register,
@@ -23,7 +23,7 @@ const Register: React.FC<{}> = () => {
     mutate(data);
   };
 
-  if (isError) return <ErrorHandler error={error} />
+  if (isError) return <ErrorHandler error={error} />;
 
   return (
     <div className="container mx-auto">
@@ -84,7 +84,7 @@ const Register: React.FC<{}> = () => {
               className="bg-yellow-500 w-full mt-10 py-2 rounded-lg text-white hover:bg-yellow-600"
               disabled={isLoading}
             >
-              Register
+              {isLoading ? 'Loading...' : 'Register'}
             </button>
           </form>
           <p className="text-center mt-5">

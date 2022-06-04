@@ -1,15 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../services/auth';
 import { useGetNotes } from '../services/notes';
-import ReactMarkdown from 'react-markdown';
+import Loader from '../components/Loader';
 
 const Notes: React.FC<{}> = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetNotes();
-
-  if (isLoading) return <p>Loading...</p>;
 
   if (isError) return <p>{error.message}</p>;
 
@@ -33,6 +32,11 @@ const Notes: React.FC<{}> = () => {
       >
         New Note
       </Link>
+      {isLoading && (
+        <div className="mt-20">
+          <Loader />
+        </div>
+      )}
       <div className="grid lg:grid-cols-2 2xl:grid-cols-3 mt-5 gap-y-5">
         {data?.data?.data?.map(note => (
           <Link to={`/notes/edit/${note.id}`}>

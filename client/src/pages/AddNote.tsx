@@ -3,13 +3,13 @@ import ReactQuill from 'react-quill';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAddNote } from '../services/notes';
 import { NoteFormInputs } from '../types';
-
-import 'react-quill/dist/quill.snow.css';
 import { htmlToMarkdown } from '../utils/parsers';
 import BackButton from '../components/BackButton';
 
+import 'react-quill/dist/quill.snow.css';
+
 const AddNote: React.FC<{}> = () => {
-  const { mutate } = useAddNote();
+  const { mutate, isLoading } = useAddNote();
   const { register, handleSubmit, setValue, watch } = useForm<NoteFormInputs>();
   const text = watch('text');
 
@@ -59,8 +59,8 @@ const AddNote: React.FC<{}> = () => {
           value={text}
           onChange={onEditorChange}
         />
-        <button className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto">
-          Add
+        <button className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto" disabled={isLoading}>
+          {isLoading ? 'Adding...' : 'Add'}
         </button>
       </form>
     </div>
