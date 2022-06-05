@@ -1,7 +1,7 @@
 import React from 'react';
 import { Oval } from 'react-loader-spinner';
 
-const Loader: React.FC<{}> = () => {
+const Loader: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       <Oval

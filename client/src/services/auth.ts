@@ -2,15 +2,15 @@ import { LoginInputs, RegisterInputs } from '../types';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../api/auth';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 export const useLogin = (): UseMutationResult<
-  Response,
+  AxiosResponse,
   AxiosError<any>,
   LoginInputs
 > => {
   const navigate = useNavigate();
-  return useMutation<Response, AxiosError<any>, LoginInputs>(
+  return useMutation<AxiosResponse, AxiosError<any>, LoginInputs>(
     async data => login(data),
     {
       onSuccess: (response: any) => {
@@ -22,12 +22,12 @@ export const useLogin = (): UseMutationResult<
 };
 
 export const useRegister = (): UseMutationResult<
-  Response,
+  AxiosResponse,
   AxiosError,
   RegisterInputs
 > => {
   const navigate = useNavigate();
-  return useMutation<Response, AxiosError, RegisterInputs>(
+  return useMutation<AxiosResponse, AxiosError, RegisterInputs>(
     async data => register(data),
     {
       onSuccess: () => navigate('/auth/login'),

@@ -4,12 +4,13 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAddNote } from '../services/notes';
 import { NoteFormInputs } from '../types';
 import { htmlToMarkdown } from '../utils/parsers';
+import ErrorHandler from '../components/ErrorHandler';
 import BackButton from '../components/BackButton';
 
 import 'react-quill/dist/quill.snow.css';
 
-const AddNote: React.FC<{}> = () => {
-  const { mutate, isLoading } = useAddNote();
+const AddNote: React.FC = () => {
+  const { mutate, isLoading, isError, error } = useAddNote();
   const { register, handleSubmit, setValue, watch } = useForm<NoteFormInputs>();
   const text = watch('text');
 
@@ -21,14 +22,18 @@ const AddNote: React.FC<{}> = () => {
     data: NoteFormInputs
   ): void => {
     const { title, text } = data;
+    console.log(text);
     const requestData = {
       data: {
         title: title === '' ? 'No title' : title,
-        text: text === '' ? 'No text' : htmlToMarkdown(text),
+        text:
+          text === '' || text === undefined ? 'No text' : htmlToMarkdown(text),
       },
     };
     mutate(requestData);
   };
+
+  if (isError) return <ErrorHandler error={error} />;
 
   return (
     <div className="container mx-auto xl:px-96 mt-20">
@@ -59,7 +64,10 @@ const AddNote: React.FC<{}> = () => {
           value={text}
           onChange={onEditorChange}
         />
-        <button className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto" disabled={isLoading}>
+        <button
+          className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto"
+          disabled={isLoading}
+        >
           {isLoading ? 'Adding...' : 'Add'}
         </button>
       </form>

@@ -7,7 +7,7 @@ import { RegisterInputs } from '../types';
 import { useRegister } from '../services/auth';
 import ErrorHandler from '../components/ErrorHandler';
 
-const Register: React.FC<{}> = () => {
+const Register: React.FC = () => {
   const { mutate, isLoading, isError, error } = useRegister();
 
   const {

@@ -13,39 +13,27 @@ export type RegisterInputs = {
   confirmPassword: string;
 }
 
-export interface PrivateRouteProps extends RouteProps {}
-
-type Note = {
-  id: number;
-  attributes: { title: string; text: string };
-}
-
 export type NoteFormInputs = {
   title: string,
   text: string
 }
 
-export type NotesResponse = {
-  data: { data: Note[] };
+export interface PrivateRouteProps extends RouteProps {}
+
+export type Note = {
+  id: number;
+  attributes: { title: string; text: string };
 }
 
-export type NoteResponse = {
-  data: { data: Note };
-}
-
-export type NotePost = {
+export type AddNoteData = {
   data: {
     title: string;
     text: string;
   };
 }
 
-export type NotePut = {
-  id: string | undefined
-  data: {
-    title: string;
-    text: string;
-  };
+export type UpdateNoteData = AddNoteData & {
+  id: number
 }
 
 export type ErrorHandlerProps = {

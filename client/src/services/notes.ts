@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from 'axios';
 import {
   useMutation,
   UseMutationResult,
@@ -13,37 +14,43 @@ import {
   deleteNote,
   updateNote,
 } from '../api/notes';
-import { NotePost, NotesResponse, NoteResponse, NotePut } from '../types';
+import { Note, AddNoteData, UpdateNoteData } from '../types';
 
-export const useGetNotes = (): UseQueryResult<NotesResponse, Error> =>
-  useQuery<NotesResponse, Error>('notes', getNotes);
+export const useGetNotes = (): UseQueryResult<Note[], AxiosError> =>
+  useQuery<Note[], AxiosError>('notes', getNotes);
 
-export const useGetNote = (
-  id: string | undefined
-): UseQueryResult<NoteResponse, Error> =>
-  useQuery<NoteResponse, Error>(['note', id], getNote);
+export const useGetNote = (id: number) =>
+  useQuery<Note, AxiosError>(['note', id], () => getNote(id));
 
-export const useAddNote = (): UseMutationResult<Response, Error, NotePost> => {
+export const useAddNote = (): UseMutationResult<
+  AxiosResponse,
+  AxiosError,
+  AddNoteData
+> => {
   const navigate = useNavigate();
-  return useMutation<Response, Error, NotePost>(addNote, {
+  return useMutation<AxiosResponse, AxiosError, AddNoteData>(addNote, {
     onSuccess: () => navigate('/'),
   });
 };
 
 export const useUpdateNote = (): UseMutationResult<
-  Response,
-  Error,
-  NotePut
+  AxiosResponse,
+  AxiosError,
+  UpdateNoteData
 > => {
   const navigate = useNavigate();
-  return useMutation<Response, Error, NotePut>(updateNote, {
+  return useMutation<AxiosResponse, AxiosError, UpdateNoteData>(updateNote, {
     onSuccess: () => navigate('/'),
   });
 };
 
-export const useDeleteNote = (): UseMutationResult<Response, Error, number> => {
+export const useDeleteNote = (): UseMutationResult<
+  AxiosResponse,
+  AxiosError,
+  number
+> => {
   const queryClient = useQueryClient();
-  return useMutation<Response, Error, number>(deleteNote, {
+  return useMutation<AxiosResponse, AxiosError, number>(deleteNote, {
     onSuccess: () => queryClient.invalidateQueries('notes'),
   });
 };

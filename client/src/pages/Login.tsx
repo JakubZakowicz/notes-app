@@ -7,7 +7,7 @@ import { LoginInputs } from '../types';
 import { useLogin } from '../services/auth';
 import ErrorHandler from '../components/ErrorHandler';
 
-const Login: React.FC<{}> = () => {
+const Login: React.FC = () => {
   const { mutate, isLoading, isError, error } = useLogin();
 
   const {

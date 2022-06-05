@@ -8,21 +8,33 @@ import { NoteFormInputs } from '../types';
 import { htmlToMarkdown, markdownToHtml } from '../utils/parsers';
 import BackButton from '../components/BackButton';
 import Loader from '../components/Loader';
+import ErrorHandler from '../components/ErrorHandler';
 
-const EditNote: React.FC<{}> = () => {
+const EditNote: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading: isDataLoading } = useGetNote(id);
-  const { mutate: updateMutation, isLoading: isUpdateLoading } =
-    useUpdateNote();
-  const { mutate: deleteMutation } = useDeleteNote();
+  const {
+    data: note,
+    isLoading: isNoteLoading,
+    isError: isNoteError,
+    error: noteError,
+  } = useGetNote(Number(id));
+  const {
+    mutate: updateMutation,
+    isLoading: isUpdateLoading,
+    isError: isUpdateError,
+    error: updateError,
+  } = useUpdateNote();
+  const {
+    mutate: deleteMutation,
+    isError: isDeleteError,
+    error: deleteError,
+  } = useDeleteNote();
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<NoteFormInputs>({
       defaultValues: { title: '', text: '' },
     });
   const text = watch('text');
-
-  const note = data?.data?.data;
 
   useEffect(() => {
     const loadedDefaultValues = {
@@ -37,12 +49,16 @@ const EditNote: React.FC<{}> = () => {
     setValue('text', text);
   };
 
+  if (isNoteError) return <ErrorHandler error={noteError} />;
+  if (isUpdateError) return <ErrorHandler error={updateError} />;
+  if (isDeleteError) return <ErrorHandler error={deleteError} />;
+
   const onSubmit: SubmitHandler<NoteFormInputs> = (
     data: NoteFormInputs
   ): void => {
     const { title, text } = data;
     const requestData = {
-      id,
+      id: Number(id),
       data: {
         title: title === '' ? 'No title' : title!,
         text: text === '' ? 'No text' : htmlToMarkdown(text!),
@@ -63,7 +79,7 @@ const EditNote: React.FC<{}> = () => {
         className="flex flex-col bg-light-yellow rounded-2xl px-12 pt-4 pb-8"
       >
         <BackButton />
-        {isDataLoading ? (
+        {isNoteLoading ? (
           <Loader />
         ) : (
           <>

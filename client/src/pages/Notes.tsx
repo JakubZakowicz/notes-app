@@ -5,18 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../services/auth';
 import { useGetNotes } from '../services/notes';
 import Loader from '../components/Loader';
+import ErrorHandler from '../components/ErrorHandler';
 
-const Notes: React.FC<{}> = () => {
+const Notes: React.FC = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGetNotes();
-
-  if (isError) return <p>{error.message}</p>;
 
   const logout = () => {
     removeToken();
     navigate('/auth/login');
   };
-
+  
+  if (isError) return <ErrorHandler error={error} />;
+  
   return (
     <div className="container mx-auto relative px-10 xl:px-20">
       <button
@@ -38,24 +39,23 @@ const Notes: React.FC<{}> = () => {
         </div>
       )}
       <div className="grid lg:grid-cols-2 2xl:grid-cols-3 mt-5 gap-y-5">
-        {data?.data?.data?.map(note => (
-          <Link to={`/notes/edit/${note.id}`}>
-            <div
-              key={note.id}
-              className="mt-5 bg-light-yellow w-[400px] h-[300px] px-8 py-5 rounded-3xl shadow-xl transition hover:scale-110"
-            >
-              <div className="flex justify-between">
-                <h2 className="text-xl font-semibold">
-                  {note.attributes.title}
-                </h2>
+        {data?.map(note => (
+          <React.Fragment key={note.id}>
+            <Link to={`/notes/edit/${note.id}`}>
+              <div className="mt-5 bg-light-yellow w-[400px] h-[300px] px-8 py-5 rounded-3xl shadow-xl transition hover:scale-110">
+                <div className="flex justify-between">
+                  <h2 className="text-xl font-semibold">
+                    {note.attributes.title}
+                  </h2>
+                </div>
+                <div className="h-52 overflow-hidden">
+                  <ReactMarkdown className="mt-4">
+                    {note.attributes.text}
+                  </ReactMarkdown>
+                </div>
               </div>
-              <div className="h-52 overflow-hidden">
-                <ReactMarkdown className="mt-4">
-                  {note.attributes.text}
-                </ReactMarkdown>
-              </div>
-            </div>
-          </Link>
+            </Link>
+          </React.Fragment>
         ))}
       </div>
     </div>

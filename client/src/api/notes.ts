@@ -1,26 +1,26 @@
-import { QueryFunctionContext } from 'react-query';
+import { AxiosResponse } from 'axios';
 import { getToken } from '../services/auth';
-import { NotesResponse, NoteResponse, NotePost, NotePut } from '../types';
+import { Note, AddNoteData, UpdateNoteData } from '../types';
 import api from './api';
 
 const authorizationHeader = {
   headers: { Authorization: `Bearer ${getToken()}` },
 };
 
-export const getNotes = async (): Promise<NotesResponse> =>
-  await api.get('/notes', authorizationHeader);
+export const getNotes = async (): Promise<Note[]> =>
+  await api.get('/notes', authorizationHeader).then(res => res.data.data);
 
-export const getNote = async (
-  context: QueryFunctionContext
-): Promise<NoteResponse> =>
-  await api.get(`/notes/${context.queryKey[1]}`, authorizationHeader);
+export const getNote = async (id: number): Promise<Note> =>
+  await api.get(`/notes/${id}`, authorizationHeader).then(res => res.data.data);
 
-export const addNote = async (data: NotePost): Promise<Response> =>
+export const addNote = async (data: AddNoteData): Promise<AxiosResponse> =>
   await api.post('/notes', data, authorizationHeader);
 
-export const updateNote = async (data: NotePut): Promise<Response> => {
+export const updateNote = async (
+  data: UpdateNoteData
+): Promise<AxiosResponse> => {
   return await api.put(`/notes/${data.id}`, data, authorizationHeader);
 };
 
-export const deleteNote = async (id: number): Promise<Response> =>
+export const deleteNote = async (id: number): Promise<AxiosResponse> =>
   await api.delete(`/notes/${id}`, authorizationHeader);
