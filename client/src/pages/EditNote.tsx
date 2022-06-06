@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import { BsFillTrashFill } from 'react-icons/bs';
@@ -12,7 +12,6 @@ import ErrorHandler from '../components/ErrorHandler';
 
 const EditNote: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const {
     data: note,
     isLoading: isNoteLoading,
@@ -67,11 +66,6 @@ const EditNote: React.FC = () => {
     updateMutation(requestData);
   };
 
-  const deleteNote = () => {
-    deleteMutation(Number(id));
-    navigate('/');
-  };
-
   return (
     <div className="container mx-auto xl:px-96 mt-20">
       <form
@@ -87,7 +81,7 @@ const EditNote: React.FC = () => {
               <h1 className="text-2xl font-semibold mt-3">Edit Note</h1>
               <button
                 type="button"
-                onClick={deleteNote}
+                onClick={() => deleteMutation(Number(id))}
                 className="transition hover:scale-125"
               >
                 <BsFillTrashFill className="text-red-500 text-2xl mt-4" />

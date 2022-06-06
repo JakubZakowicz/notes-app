@@ -50,7 +50,11 @@ export const useDeleteNote = (): UseMutationResult<
   number
 > => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation<AxiosResponse, AxiosError, number>(deleteNote, {
-    onSuccess: () => queryClient.invalidateQueries('notes'),
+    onSuccess: () => {
+      queryClient.invalidateQueries('notes');
+      navigate('/');
+    },
   });
 };

@@ -1,23 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
-import { removeToken } from '../services/auth';
+import { useLogout } from '../services/auth';
 import { useGetNotes } from '../services/notes';
 import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
 
 const Notes: React.FC = () => {
-  const navigate = useNavigate();
+  const logout = useLogout()
   const { data, isLoading, isError, error } = useGetNotes();
 
-  const logout = () => {
-    removeToken();
-    navigate('/auth/login');
-  };
-  
   if (isError) return <ErrorHandler error={error} />;
-  
+
   return (
     <div className="container mx-auto relative px-10 xl:px-20">
       <button

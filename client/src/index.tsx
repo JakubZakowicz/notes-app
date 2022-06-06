@@ -1,17 +1,21 @@
 import React from 'react';
 import './index.css';
 import App from './App';
-import { render } from "react-dom"; 
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { render } from 'react-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { isAuthenticated, addAuthHeader } from './services/auth';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
+
+if (isAuthenticated()) addAuthHeader();
 
 render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-        <App />
-        <ReactQueryDevtools />
+      <App />
+      <ReactQueryDevtools />
     </QueryClientProvider>
-  </React.StrictMode>
-, document.getElementById("root"));
+  </React.StrictMode>,
+  document.getElementById('root')
+);

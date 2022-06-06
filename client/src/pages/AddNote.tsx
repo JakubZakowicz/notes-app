@@ -22,7 +22,6 @@ const AddNote: React.FC = () => {
     data: NoteFormInputs
   ): void => {
     const { title, text } = data;
-    console.log(text);
     const requestData = {
       data: {
         title: title === '' ? 'No title' : title,

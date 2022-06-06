@@ -1,8 +1,9 @@
-import { LoginInputs, RegisterInputs } from '../types';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/api';
 import { login, register } from '../api/auth';
-import { AxiosError, AxiosResponse } from 'axios';
+import { LoginInputs, RegisterInputs } from '../types';
 
 export const useLogin = (): UseMutationResult<
   AxiosResponse,
@@ -13,8 +14,9 @@ export const useLogin = (): UseMutationResult<
   return useMutation<AxiosResponse, AxiosError<any>, LoginInputs>(
     async data => login(data),
     {
-      onSuccess: (response: any) => {
+      onSuccess: (response: AxiosResponse) => {
         setToken(response.data.jwt);
+        addAuthHeader();
         navigate('/');
       },
     }
@@ -35,8 +37,25 @@ export const useRegister = (): UseMutationResult<
   );
 };
 
+export const useLogout = () => {
+  const navigate = useNavigate();
+  return () => {
+    removeToken();
+    removeAuthHeader();
+    navigate('/auth/login');
+  };
+};
+
 export const isAuthenticated = (): boolean =>
   getToken() && getToken() !== '' && getToken() !== undefined ? true : false;
+
+export const addAuthHeader = (): void => {
+  api.defaults.headers.common['Authorization'] = 'Bearer ' + getToken();
+};
+
+export const removeAuthHeader = (): void => {
+  delete api.defaults.headers.common['Authorization'];
+};
 
 export const setToken = (token: string): void =>
   localStorage.setItem('jwt', token);
