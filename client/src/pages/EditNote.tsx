@@ -9,6 +9,7 @@ import { htmlToMarkdown, markdownToHtml } from '../utils/parsers';
 import BackButton from '../components/BackButton';
 import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
+import Layout from '../components/Layout';
 
 const EditNote: React.FC = () => {
   const { id } = useParams();
@@ -67,57 +68,59 @@ const EditNote: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto xl:px-96 mt-20">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col bg-light-yellow rounded-2xl px-12 pt-4 pb-8"
-      >
-        <BackButton />
-        {isNoteLoading ? (
-          <Loader />
-        ) : (
-          <>
-            <div className="flex justify-between">
-              <h1 className="text-2xl font-semibold mt-3">Edit Note</h1>
+    <Layout>
+      <div className="container mx-auto xl:px-96 mt-20">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col bg-light-yellow rounded-2xl px-12 pt-4 pb-8"
+        >
+          <BackButton />
+          {isNoteLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <div className="flex justify-between">
+                <h1 className="text-2xl font-semibold mt-3">Edit Note</h1>
+                <button
+                  type="button"
+                  onClick={() => deleteMutation(Number(id))}
+                  className="transition hover:scale-125"
+                >
+                  <BsFillTrashFill className="text-red-500 text-2xl mt-4" />
+                </button>
+              </div>
+              <label htmlFor="title" className="mt-5 text-lg">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                placeholder="Enter title"
+                {...register('title')}
+                className="border h-12 rounded-xl pl-5"
+              />
+              <label htmlFor="text" className="mt-5 text-lg">
+                Text
+              </label>
+              <ReactQuill
+                className="bg-white h-80"
+                theme="snow"
+                id="text"
+                placeholder="Start writing..."
+                value={text}
+                onChange={onEditorChange}
+              />
               <button
-                type="button"
-                onClick={() => deleteMutation(Number(id))}
-                className="transition hover:scale-125"
+                className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto"
+                disabled={isUpdateLoading}
               >
-                <BsFillTrashFill className="text-red-500 text-2xl mt-4" />
+                {isUpdateLoading ? 'Updating...' : 'Update'}
               </button>
-            </div>
-            <label htmlFor="title" className="mt-5 text-lg">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              placeholder="Enter title"
-              {...register('title')}
-              className="border h-12 rounded-xl pl-5"
-            />
-            <label htmlFor="text" className="mt-5 text-lg">
-              Text
-            </label>
-            <ReactQuill
-              className="bg-white h-80"
-              theme="snow"
-              id="text"
-              placeholder="Start writing..."
-              value={text}
-              onChange={onEditorChange}
-            />
-            <button
-              className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto"
-              disabled={isUpdateLoading}
-            >
-              {isUpdateLoading ? 'Updating...' : 'Update'}
-            </button>
-          </>
-        )}
-      </form>
-    </div>
+            </>
+          )}
+        </form>
+      </div>
+    </Layout>
   );
 };
 

@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Notes from './pages/Notes';
-import PrivateRoute from './components/PrivateRoute';
 import AddNote from './pages/AddNote';
 import EditNote from './pages/EditNote';
 

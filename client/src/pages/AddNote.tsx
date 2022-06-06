@@ -4,6 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAddNote } from '../services/notes';
 import { NoteFormInputs } from '../types';
 import { htmlToMarkdown } from '../utils/parsers';
+import Layout from '../components/Layout';
 import ErrorHandler from '../components/ErrorHandler';
 import BackButton from '../components/BackButton';
 
@@ -35,42 +36,44 @@ const AddNote: React.FC = () => {
   if (isError) return <ErrorHandler error={error} />;
 
   return (
-    <div className="container mx-auto xl:px-96 mt-20">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col bg-light-yellow rounded-2xl px-12 pt-4 pb-8"
-      >
-        <BackButton />
-        <h1 className="text-2xl font-semibold mt-3">Add Note</h1>
-        <label htmlFor="title" className="mt-5 text-lg">
-          Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          placeholder="Enter title"
-          {...register('title')}
-          className="border h-12 rounded-xl pl-5"
-        />
-        <label htmlFor="text" className="mt-5 text-lg">
-          Text
-        </label>
-        <ReactQuill
-          className="bg-white h-80"
-          theme="snow"
-          id="text"
-          placeholder="Start writing..."
-          value={text}
-          onChange={onEditorChange}
-        />
-        <button
-          className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto"
-          disabled={isLoading}
+    <Layout>
+      <div className="container mx-auto xl:px-96 mt-20">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col bg-light-yellow rounded-2xl px-12 pt-4 pb-8"
         >
-          {isLoading ? 'Adding...' : 'Add'}
-        </button>
-      </form>
-    </div>
+          <BackButton />
+          <h1 className="text-2xl font-semibold mt-3">Add Note</h1>
+          <label htmlFor="title" className="mt-5 text-lg">
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            placeholder="Enter title"
+            {...register('title')}
+            className="border h-12 rounded-xl pl-5"
+          />
+          <label htmlFor="text" className="mt-5 text-lg">
+            Text
+          </label>
+          <ReactQuill
+            className="bg-white h-80"
+            theme="snow"
+            id="text"
+            placeholder="Start writing..."
+            value={text}
+            onChange={onEditorChange}
+          />
+          <button
+            className="bg-yellow-500 w-72 mt-20 py-2 rounded-lg text-white hover:bg-yellow-600 mx-auto"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Adding...' : 'Add'}
+          </button>
+        </form>
+      </div>
+    </Layout>
   );
 };
 

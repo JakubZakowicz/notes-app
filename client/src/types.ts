@@ -1,6 +1,10 @@
 import { AxiosError } from 'axios';
 import { RouteProps } from 'react-router-dom';
 
+export type LayoutProps = {
+  children: JSX.Element[] | JSX.Element
+}
+
 export type LoginInputs = {
   email: string;
   password: string;
