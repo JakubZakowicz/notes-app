@@ -19,21 +19,25 @@ const EditNote: React.FC = () => {
     isError: isNoteError,
     error: noteError,
   } = useGetNote(Number(id));
+
   const {
     mutate: updateMutation,
     isLoading: isUpdateLoading,
     isError: isUpdateError,
     error: updateError,
   } = useUpdateNote();
+
   const {
     mutate: deleteMutation,
     isError: isDeleteError,
     error: deleteError,
   } = useDeleteNote();
+
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<NoteFormInputs>({
       defaultValues: { title: '', text: '' },
     });
+    
   const text = watch('text');
 
   useEffect(() => {

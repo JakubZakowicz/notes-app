@@ -14,10 +14,10 @@ import {
   deleteNote,
   updateNote,
 } from '../api/notes';
-import { Note, AddNoteData, UpdateNoteData } from '../types';
+import { Note, AddNoteData, UpdateNoteData, NotesResponse } from '../types';
 
-export const useGetNotes = (): UseQueryResult<Note[], AxiosError> =>
-  useQuery<Note[], AxiosError>('notes', getNotes);
+export const useGetNotes = (page: number): UseQueryResult<NotesResponse, AxiosError> =>
+  useQuery<NotesResponse, AxiosError>(['notes', page], () => getNotes(page));
 
 export const useGetNote = (id: number) =>
   useQuery<Note, AxiosError>(['note', id], () => getNote(id));

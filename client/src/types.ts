@@ -29,6 +29,11 @@ export type Note = {
   attributes: { title: string; text: string };
 }
 
+export type NotesResponse = {
+  notes: Note[];
+  pageCount: number
+}
+
 export type AddNoteData = {
   data: {
     title: string;
