@@ -4,7 +4,7 @@ import api from './api';
 
 export const getNotes = async (page: number): Promise<NotesResponse> =>
   await api
-    .get(`/notes?pagination[page]=${page}&pagination[pageSize]=12`)
+    .get(`/notes?pagination[page]=${page}&pagination[pageSize]=12&populate=*`)
     .then(res => ({
       notes: res.data.data,
       pageCount: res.data.meta.pagination.pageCount,

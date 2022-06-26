@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import queryString from 'query-string';
+import ReactPaginate from 'react-paginate';
 import { useGetNotes } from '../services/notes';
 import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
 import Layout from '../components/Layout';
-import ReactPaginate from 'react-paginate';
-import queryString from 'query-string';
+import { Note } from '../types';
+import { getUser } from '../utils/auth';
+import Pagination from '../components/Pagination';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +18,8 @@ const Notes: React.FC = () => {
     queryStringPageParam ? Number(queryStringPageParam) : 1
   );
   const { data, isLoading, isError, error } = useGetNotes(page);
+  let userNotes: Note[] = [];
+  const user = getUser();
 
   useEffect(() => {
     navigate(`?page=${page}`);
@@ -26,6 +31,15 @@ const Notes: React.FC = () => {
   };
 
   if (isError) return <ErrorHandler error={error} />;
+
+  if (data) {
+    data.notes.forEach(note => {
+      let noteUser = note.attributes.user;
+      if (noteUser.data.attributes.username === user.username) {
+        userNotes.push(note);
+      }
+    });
+  }
 
   return (
     <Layout>
@@ -43,7 +57,7 @@ const Notes: React.FC = () => {
         ) : (
           <>
             <div className="grid lg:grid-cols-2 2xl:grid-cols-3 mt-5 gap-y-5">
-              {data?.notes?.map(note => (
+              {userNotes.map(note => (
                 <React.Fragment key={note.id}>
                   <Link to={`/notes/edit/${note.id}`}>
                     <div className="mt-5 bg-light-yellow w-[400px] h-[300px] px-8 py-5 rounded-3xl shadow-xl transition hover:scale-110">
@@ -62,24 +76,11 @@ const Notes: React.FC = () => {
                 </React.Fragment>
               ))}
             </div>
-            <div className="flex justify-center">
-              <ReactPaginate
-                pageCount={data?.pageCount!}
-                initialPage={page - 1}
-                previousLabel="<"
-                nextLabel=">"
-                pageLinkClassName="bg-white text-black inline-flex items-center px-4 py-2 border border-gray-500 text-lg font-medium rounded-md hover:bg-yellow-400 transition"
-                previousLinkClassName="inline-flex items-center px-4 py-2 rounded-l-md border border-gray-500 bg-white text-lg font-bold text-black hover:bg-yellow-400 transition"
-                nextLinkClassName="inline-flex items-center px-4 py-2 rounded-r-md bg-white text-lg border border-gray-500 font-medium text-black hover:bg-yellow-400 transition"
-                breakLabel="..."
-                breakLinkClassName="inline-flex items-center px-4 py-2 bg-white text-lg font-medium text-black"
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                containerClassName="flex my-10 gap-4"
-                activeLinkClassName="bg-yellow-400 text-white"
-                onPageChange={handlePageClick}
-              />
-            </div>
+            <Pagination
+              pageCount={data?.pageCount!}
+              page={page}
+              handlePageClick={handlePageClick}
+            />
           </>
         )}
       </div>

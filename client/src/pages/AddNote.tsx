@@ -7,7 +7,7 @@ import { htmlToMarkdown } from '../utils/parsers';
 import Layout from '../components/Layout';
 import ErrorHandler from '../components/ErrorHandler';
 import BackButton from '../components/BackButton';
-
+import { getUser } from '../utils/auth';
 import 'react-quill/dist/quill.snow.css';
 
 const AddNote: React.FC = () => {
@@ -28,6 +28,7 @@ const AddNote: React.FC = () => {
         title: title === '' ? 'No title' : title,
         text:
           text === '' || text === undefined ? 'No text' : htmlToMarkdown(text),
+        user: getUser()
       },
     };
     mutate(requestData);

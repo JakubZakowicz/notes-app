@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { login, register } from '../api/auth';
 import { LoginInputs, RegisterInputs } from '../types';
 import {
-  setToken,
+  setUserData,
   addAuthHeader,
-  removeToken,
+  removeUserData,
   removeAuthHeader,
 } from '../utils/auth';
 
@@ -19,8 +19,8 @@ export const useLogin = (): UseMutationResult<
   return useMutation<AxiosResponse, AxiosError<any>, LoginInputs>(
     async data => login(data),
     {
-      onSuccess: (response: AxiosResponse) => {
-        setToken(response.data.jwt);
+      onSuccess: (res: AxiosResponse) => {
+        setUserData(res.data);
         addAuthHeader();
         navigate('/');
       },
@@ -45,7 +45,7 @@ export const useRegister = (): UseMutationResult<
 export const useLogout = () => {
   const navigate = useNavigate();
   return () => {
-    removeToken();
+    removeUserData();
     removeAuthHeader();
     navigate('/auth/login');
   };
