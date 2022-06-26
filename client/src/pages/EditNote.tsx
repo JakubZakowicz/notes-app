@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import { BsFillTrashFill } from 'react-icons/bs';
-import { useDeleteNote, useGetNote, useUpdateNote } from '../services/notes';
-import { NoteFormInputs } from '../types';
-import { htmlToMarkdown, markdownToHtml } from '../utils/parsers';
 import BackButton from '../components/BackButton';
 import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
 import Layout from '../components/Layout';
+import Seo from '../components/Seo';
+import { useDeleteNote, useGetNote, useUpdateNote } from '../services/notes';
+import { NoteFormInputs } from '../types';
+import { htmlToMarkdown, markdownToHtml } from '../utils/parsers';
 
 const EditNote: React.FC = () => {
   const { id } = useParams();
@@ -73,6 +74,7 @@ const EditNote: React.FC = () => {
 
   return (
     <Layout>
+      <Seo title="Edit Note" />
       <div className="container mx-auto xl:px-96 mt-20">
         <form
           onSubmit={handleSubmit(onSubmit)}

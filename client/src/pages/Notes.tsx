@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import queryString from 'query-string';
-import ReactPaginate from 'react-paginate';
 import { useGetNotes } from '../services/notes';
+import Pagination from '../components/Pagination';
+import Seo from '../components/Seo';
 import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
 import Layout from '../components/Layout';
 import { Note } from '../types';
 import { getUser } from '../utils/auth';
-import Pagination from '../components/Pagination';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
@@ -43,6 +43,7 @@ const Notes: React.FC = () => {
 
   return (
     <Layout>
+      <Seo title="Notes" />
       <div className="px-10 xl:px-20">
         <Link
           to="notes/create"

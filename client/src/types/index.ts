@@ -75,3 +75,7 @@ export type PaginationProps = {
   page: number;
   handlePageClick: (selectedItem: { selected: number }) => void;
 };
+
+export type SeoProps = {
+  title: string;
+}

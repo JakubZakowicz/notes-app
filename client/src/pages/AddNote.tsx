@@ -7,6 +7,7 @@ import { htmlToMarkdown } from '../utils/parsers';
 import Layout from '../components/Layout';
 import ErrorHandler from '../components/ErrorHandler';
 import BackButton from '../components/BackButton';
+import Seo from '../components/Seo';
 import { getUser } from '../utils/auth';
 import 'react-quill/dist/quill.snow.css';
 
@@ -38,6 +39,7 @@ const AddNote: React.FC = () => {
 
   return (
     <Layout>
+      <Seo title="Add Note" />
       <div className="container mx-auto xl:px-96 mt-20">
         <form
           onSubmit={handleSubmit(onSubmit)}

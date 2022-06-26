@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import ErrorHandler from '../components/ErrorHandler';
+import Seo from '../components/Seo';
 import { registerSchema } from '../schemas';
 import { RegisterInputs } from '../types';
 import { useRegister } from '../services/auth';
-import ErrorHandler from '../components/ErrorHandler';
 
 const Register: React.FC = () => {
   const { mutate, isLoading, isError, error } = useRegister();
@@ -27,6 +28,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="container mx-auto">
+      <Seo title="Register" />
       <div className="flex justify-center h-screen items-center">
         <div className="bg-white bg-opacity-75 border w-96 rounded-xl px-10 py-5 shadow-xl">
           <h1 className="text-3xl font-semibold text-center">Register</h1>
