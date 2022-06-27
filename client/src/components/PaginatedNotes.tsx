@@ -14,17 +14,17 @@ const UserNotes: React.FC<{ notes: Note[] }> = ({ notes }) => {
   const itemsPerPage = 6;
   const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
   const pageCount = Math.ceil(notes.length / itemsPerPage);
-  const [itemOffset, setItemOffset] = useState((0));
+  const [itemOffset, setItemOffset] = useState(0);
 
   useEffect(() => {
-    setItemOffset((page - 1) * itemsPerPage)
+    setItemOffset((page - 1) * itemsPerPage);
     const endOffset = itemOffset + itemsPerPage;
     setCurrentNotes(notes.slice(itemOffset, endOffset));
   }, [itemOffset, itemsPerPage, notes, page]);
 
   useEffect(() => {
     navigate(`?page=${page}`);
-    if(page > pageCount) setPage(1)
+    if (page > pageCount) setPage(1);
   }, [navigate, page, pageCount]);
 
   const handlePageClick = (e: { selected: number }) => {
@@ -32,6 +32,13 @@ const UserNotes: React.FC<{ notes: Note[] }> = ({ notes }) => {
     setItemOffset(newOffset);
     setPage(e.selected + 1);
   };
+
+  // if (currentNotes.length === 0)
+  //   return (
+  //     <p className="absolute top-40 left-1/2 transform -translate-x-1/2 t text-4xl font-medium">
+  //       There are no notes. Add one
+  //     </p>
+  //   );
 
   return (
     <>

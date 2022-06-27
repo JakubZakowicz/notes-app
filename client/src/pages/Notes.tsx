@@ -19,8 +19,8 @@ const Notes: React.FC = () => {
 
   if (data) {
     data.notes.forEach(note => {
-      let noteUser = note.attributes.user;
-      if (noteUser.data.attributes.username === user?.username) {
+      let noteUser = note.attributes.user.data;
+      if (noteUser && noteUser.attributes.username === user?.username) {
         userNotes.push(note);
       }
     });
