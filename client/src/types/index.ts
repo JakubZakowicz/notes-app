@@ -46,7 +46,6 @@ export type Note = {
 
 export type NotesResponse = {
   notes: Note[];
-  pageCount: number;
 };
 
 export type AddNoteData = {

@@ -2,12 +2,11 @@ import { AxiosResponse } from 'axios';
 import { Note, AddNoteData, UpdateNoteData, NotesResponse } from '../types';
 import api from './api';
 
-export const getNotes = async (page: number): Promise<NotesResponse> =>
+export const getNotes = async (): Promise<NotesResponse> =>
   await api
-    .get(`/notes?pagination[page]=${page}&pagination[pageSize]=12&populate=*`)
+    .get(`/notes?populate=*`)
     .then(res => ({
       notes: res.data.data,
-      pageCount: res.data.meta.pagination.pageCount,
     }));
 
 export const getNote = async (id: number): Promise<Note> =>

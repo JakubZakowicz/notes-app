@@ -16,8 +16,8 @@ import {
 } from '../api/notes';
 import { Note, AddNoteData, UpdateNoteData, NotesResponse } from '../types';
 
-export const useGetNotes = (page: number): UseQueryResult<NotesResponse, AxiosError> =>
-  useQuery<NotesResponse, AxiosError>(['notes', page], () => getNotes(page));
+export const useGetNotes = (): UseQueryResult<NotesResponse, AxiosError> =>
+  useQuery<NotesResponse, AxiosError>('notes', getNotes);
 
 export const useGetNote = (id: number) =>
   useQuery<Note, AxiosError>(['note', id], () => getNote(id));
