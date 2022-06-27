@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   getNotes,
   getNote,
@@ -40,7 +41,10 @@ export const useUpdateNote = (): UseMutationResult<
 > => {
   const navigate = useNavigate();
   return useMutation<AxiosResponse, AxiosError, UpdateNoteData>(updateNote, {
-    onSuccess: () => navigate('/'),
+    onSuccess: () => {
+      navigate(-1);
+      toast.success('Note updated successfully');
+    },
   });
 };
 
@@ -54,7 +58,8 @@ export const useDeleteNote = (): UseMutationResult<
   return useMutation<AxiosResponse, AxiosError, number>(deleteNote, {
     onSuccess: () => {
       queryClient.invalidateQueries('notes');
-      navigate('/');
+      navigate(-1);
+      toast.success('Note deleted successfully');
     },
   });
 };

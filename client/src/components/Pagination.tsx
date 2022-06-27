@@ -7,7 +7,7 @@ const Pagination: React.FC<PaginationProps> = ({
   page,
   handlePageClick,
 }) =>
-  pageCount === 1 ? (
+  pageCount <= 1 ? (
     <></>
   ) : (
     <>

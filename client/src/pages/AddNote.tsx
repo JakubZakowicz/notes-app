@@ -10,6 +10,7 @@ import BackButton from '../components/BackButton';
 import Seo from '../components/Seo';
 import { getUser } from '../utils/auth';
 import 'react-quill/dist/quill.snow.css';
+import { toast } from 'react-toastify';
 
 const AddNote: React.FC = () => {
   const { mutate, isLoading, isError, error } = useAddNote();
@@ -33,6 +34,7 @@ const AddNote: React.FC = () => {
       },
     };
     mutate(requestData);
+    toast.success('Note added successfully');
   };
 
   if (isError) return <ErrorHandler error={error} />;

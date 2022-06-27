@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { login, register } from '../api/auth';
 import { LoginInputs, RegisterInputs } from '../types';
 import {
@@ -23,6 +24,7 @@ export const useLogin = (): UseMutationResult<
         setUserData(res.data);
         addAuthHeader();
         navigate('/');
+        toast.success('You are successfully logged!');
       },
     }
   );
@@ -37,7 +39,10 @@ export const useRegister = (): UseMutationResult<
   return useMutation<AxiosResponse, AxiosError, RegisterInputs>(
     async data => register(data),
     {
-      onSuccess: () => navigate('/auth/login'),
+      onSuccess: () => {
+        navigate('/auth/login');
+        toast.success('You are successfully registered!');
+      },
     }
   );
 };
@@ -48,5 +53,6 @@ export const useLogout = () => {
     removeUserData();
     removeAuthHeader();
     navigate('/auth/login');
+    toast.success('You are successfully logged out!');
   };
 };

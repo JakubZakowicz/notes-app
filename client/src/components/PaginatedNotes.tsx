@@ -11,20 +11,21 @@ const UserNotes: React.FC<{ notes: Note[] }> = ({ notes }) => {
     queryStringPageParam ? Number(queryStringPageParam) : 1
   );
   const navigate = useNavigate();
-  const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
-  const [pageCount, setPageCount] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 6;
+  const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
+  const pageCount = Math.ceil(notes.length / itemsPerPage);
+  const [itemOffset, setItemOffset] = useState((0));
 
   useEffect(() => {
+    setItemOffset((page - 1) * itemsPerPage)
     const endOffset = itemOffset + itemsPerPage;
     setCurrentNotes(notes.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(notes.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, notes]);
+  }, [itemOffset, itemsPerPage, notes, page]);
 
   useEffect(() => {
     navigate(`?page=${page}`);
-  }, [navigate, page]);
+    if(page > pageCount) setPage(1)
+  }, [navigate, page, pageCount]);
 
   const handlePageClick = (e: { selected: number }) => {
     const newOffset = (e.selected * itemsPerPage) % notes.length;
