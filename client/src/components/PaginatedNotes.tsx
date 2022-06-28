@@ -33,12 +33,12 @@ const UserNotes: React.FC<{ notes: Note[] }> = ({ notes }) => {
     setPage(e.selected + 1);
   };
 
-  // if (currentNotes.length === 0)
-  //   return (
-  //     <p className="absolute top-40 left-1/2 transform -translate-x-1/2 t text-4xl font-medium">
-  //       There are no notes. Add one
-  //     </p>
-  //   );
+  if (currentNotes.length === 0)
+    return (
+      <p className="absolute top-40 left-1/2 transform -translate-x-1/2 t text-4xl font-medium">
+        There are no notes. Add one
+      </p>
+    );
 
   return (
     <>
