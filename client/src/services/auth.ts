@@ -32,11 +32,11 @@ export const useLogin = (): UseMutationResult<
 
 export const useRegister = (): UseMutationResult<
   AxiosResponse,
-  AxiosError,
+  AxiosError<any>,
   RegisterInputs
 > => {
   const navigate = useNavigate();
-  return useMutation<AxiosResponse, AxiosError, RegisterInputs>(
+  return useMutation<AxiosResponse, AxiosError<any>, RegisterInputs>(
     async data => register(data),
     {
       onSuccess: () => {

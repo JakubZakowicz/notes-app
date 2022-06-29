@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,7 +24,14 @@ const Register: React.FC = () => {
     mutate(data);
   };
 
-  if (isError) return <ErrorHandler error={error} />;
+  if (isError) {
+    var { message } = error?.response?.data?.error;
+    if (
+      message !== 'Email is already taken' &&
+      message !== 'An error occurred during account creation'
+    )
+      return <ErrorHandler error={error} />;
+  }
 
   return (
     <div className="container mx-auto">
@@ -32,6 +39,13 @@ const Register: React.FC = () => {
       <div className="flex justify-center h-screen items-center">
         <div className="bg-white bg-opacity-75 border w-96 rounded-xl px-10 py-5 shadow-xl">
           <h1 className="text-3xl font-semibold text-center">Register</h1>
+          {isError && (
+            <p className="text-red-500 text-center mt-2 -mb-4">
+              {message === 'An error occurred during account creation'
+                ? 'Username is already taken'
+                : message}
+            </p>
+          )}
           <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
             <div className="flex flex-col gap-8">
               <div className="relative">
