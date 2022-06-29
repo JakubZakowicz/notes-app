@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useGetNotes } from '../services/notes';
 import PaginatedNotes from '../components/PaginatedNotes';
 import Seo from '../components/Seo';
-import Loader from '../components/Loader';
 import ErrorHandler from '../components/ErrorHandler';
 import Layout from '../components/Layout';
 import { Note } from '../types';
@@ -19,7 +18,7 @@ const Notes: React.FC = () => {
 
   if (data) {
     data.notes.forEach(note => {
-      console.log(note)
+      console.log(note);
       let noteUser = note?.attributes?.user?.data;
       if (noteUser && noteUser.attributes.username === user?.username) {
         userNotes.push(note);
@@ -37,13 +36,7 @@ const Notes: React.FC = () => {
         >
           New Note
         </Link>
-        {isLoading ? (
-          <div className="mt-20">
-            <Loader />
-          </div>
-        ) : (
-          <PaginatedNotes notes={userNotes} />
-        )}
+        <PaginatedNotes notes={userNotes} isLoading={isLoading} />
       </div>
     </Layout>
   );
