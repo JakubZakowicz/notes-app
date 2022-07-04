@@ -12,12 +12,24 @@ This is an application that allows users to take notes. It is a full stack appli
 - Implementing markdown editor in notes.
 - Using headless CMS like [Strapi](https://strapi.io/).
 - Handling request errors.
-- Getting query params using [query-string](https://www.npmjs.com/package/query-string)
+- Getting query params using [query-string](https://www.npmjs.com/package/query-string).
 - Given the fact that this is my second project in typescript, the ability to use this language has improved.
-- Implementing notifications by using [react-toastify](https://www.npmjs.com/package/react-toastify).
+- Implementing notifications by using [react-toastify](https://www.npmjs.com/package/re.act-toastify).
 - Improving SEO by using [react-helmet](https://www.npmjs.com/package/react-helmet)
+- Making code more readable and understandable by providing better file and folder structure.
 
 For such a small application I have learned a lot.
 
 ## Demo
 Here is a working live demo: https://react-strapi-notes-app.netlify.app/
+
+## Setup
+Clone this repo to your desktop and then setup separately client and server.
+
+### Server
+Go to server folder `cd server` and then install all dependiences by running `npm i` or `yarn`.  
+Once the dependiencies are installed, you can run `npm run develop` to start the server.
+
+### Client
+Go to server folder `cd client` and then install all dependiences by running `npm i` or `yarn`.  
+Once the dependiencies are installed, you can run `npm run start` to start the client.
