@@ -43,6 +43,7 @@ const Login: React.FC = () => {
                   id="email"
                   type="email"
                   {...register('email')}
+                  defaultValue="admin@example.com"
                   className="h-10 border rounded-lg w-full pl-2"
                 />
                 <p className="text-red-500 absolute">{errors.email?.message}</p>
@@ -53,6 +54,7 @@ const Login: React.FC = () => {
                   id="password"
                   type="password"
                   {...register('password')}
+                  defaultValue="password"
                   className="h-10 border rounded-lg w-full pl-2"
                 />
                 <p className="text-red-500 absolute -bottom-5">
